@@ -1,9 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import useDropDown from "../hooks/useDropDown";
+import DropDown from "./DropDown";
+import { Search } from "lucide-react";
 
 const SearchSection = () => {
   const [inputValue, setInputValue] = useState<string>("");
+
+  const {
+    handleDropDownKeyDown,
+    isFocus,
+    handleClickDropDownList,
+    dropDownList,
+    setDropDownItemIndex,
+    dropDownItemIndex,
+  } = useDropDown(inputValue);
 
   useEffect(() => {
     console.log("이벤트 =>", inputValue);
@@ -18,8 +30,12 @@ const SearchSection = () => {
   };
 
   return (
-    <div className="w-[50%]">
-      <form onSubmit={handleSubmit} className="flex gap-2">
+    <form
+      onSubmit={handleSubmit}
+      data-id="search-form"
+      className="flex flex-col w-[600px]"
+    >
+      <div className="flex gap-4">
         <input
           type="text"
           id="keyword"
@@ -27,17 +43,28 @@ const SearchSection = () => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setInputValue(e.target.value)
           }
+          onKeyDown={handleDropDownKeyDown}
+          autoComplete="off"
           placeholder="검색어를 입력해주세요."
           className="w-full border border-black p-4 rounded-lg"
         />
         <button
           type="submit"
-          className="w-[10%] border border-black rounded-lg"
+          className="flex justify-center items-center w-[10%] border border-black rounded-lg"
         >
-          검색
+          <Search />
         </button>
-      </form>
-    </div>
+      </div>
+
+      {isFocus && (
+        <DropDown
+          handleClickDropDownList={handleClickDropDownList}
+          dropDownList={dropDownList}
+          setDropDownItemIndex={setDropDownItemIndex}
+          dropDownItemIndex={dropDownItemIndex}
+        />
+      )}
+    </form>
   );
 };
 
