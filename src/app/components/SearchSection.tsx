@@ -35,7 +35,7 @@ const SearchSection = () => {
       data-id="search-form"
       className="flex flex-col w-[600px]"
     >
-      <div className="flex gap-4">
+      <div className="relative flex gap-4">
         <input
           type="text"
           id="keyword"
@@ -50,7 +50,7 @@ const SearchSection = () => {
         />
         <button
           type="submit"
-          className="flex justify-center items-center w-[10%] border border-black rounded-lg"
+          className="absolute right-0 flex justify-center items-center w-[10%] h-[100%]"
         >
           <Search />
         </button>
