@@ -1,12 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useDropDown from "../hooks/useDropDown";
 import DropDown from "./DropDown";
 import { Search } from "lucide-react";
+import { useForm } from "react-hook-form";
+
+type FormValue = {
+  keyword: string;
+};
 
 const SearchSection = () => {
-  const [inputValue, setInputValue] = useState<string>("");
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormValue>({
+    defaultValues: {
+      keyword: "",
+    },
+    mode: "onSubmit",
+  });
+
+  const inputValue = watch("keyword");
 
   const {
     handleDropDownKeyDown,
@@ -21,17 +38,13 @@ const SearchSection = () => {
     console.log("이벤트 =>", inputValue);
   }, [inputValue]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (inputValue.trim() === "") {
-      return alert("검색어를 입력해주세요!");
-    }
+  const onSubmit = (data: FormValue) => {
+    console.log("제출된 데이터:", data);
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       data-id="search-form"
       className="flex flex-col w-[600px]"
     >
@@ -39,13 +52,9 @@ const SearchSection = () => {
         <input
           type="text"
           id="keyword"
-          value={inputValue}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setInputValue(e.target.value)
-          }
+          {...register("keyword", { required: "검색어를 입력해주세요." })}
           onKeyDown={handleDropDownKeyDown}
           autoComplete="off"
-          placeholder="검색어를 입력해주세요."
           className="w-full border border-black p-4 rounded-lg"
         />
         <button
@@ -55,6 +64,11 @@ const SearchSection = () => {
           <Search />
         </button>
       </div>
+
+      {/* 유효성 검사 오류 메시지 표시 */}
+      {errors.keyword && (
+        <p className="text-red-500 mt-1">{errors.keyword.message}</p>
+      )}
 
       {isFocus && (
         <DropDown
