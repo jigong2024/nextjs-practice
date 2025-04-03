@@ -1,12 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-
-type FormValues = {
-  email: string;
-  password: string;
-  passwordConfirm: string;
-};
+import { FormValues } from "./schema";
 
 const HookPage = () => {
   const {
